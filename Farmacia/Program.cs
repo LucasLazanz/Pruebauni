@@ -43,7 +43,21 @@ namespace Farmacia
 			farm.agregarEmpleado(Emp3);
 			farm.agregarEmpleado(Emp4);
 			farm.agregarEmpleado(Emp5);
+						
 			
+			DateTime hoy=DateTime.Now;
+			DateTime ayer=hoy.AddDays(1);
+			DateTime antea=hoy.AddDays(-2);
+			DateTime aananteyer=hoy.AddDays(-3);DateTime ananante=hoy.AddDays(-4);DateTime ayanananteaer=hoy.AddDays(-5);
+			Console.WriteLine(comparofechas(hoy,ayer,1));
+			Console.WriteLine(comparofechas(hoy,antea,-5));
+			Console.WriteLine(comparofechas(hoy,aananteyer,-5));
+			Console.WriteLine(comparofechas(hoy,ananante,-5));
+			Console.WriteLine(comparofechas(hoy,ayanananteaer,-5));
+
+
+			
+
 			while (true)
 			{
 				Console.WriteLine("Elija una opcion; ");
@@ -55,11 +69,11 @@ namespace Farmacia
 				Console.WriteLine("6)Empleado con mayor monto final vendido");
 				Console.WriteLine("0)Salir");
 				Console.WriteLine("-------------");
-				int opcion=int.Parse(Console.ReadLine());
-				if((opcion>=1)&(opcion<=6)){
+				string opcion=Console.ReadLine();
+				//if((opcion>=1)&(opcion<=6)){
 					switch (opcion)
 					{
-					case 1:
+					case "1":
 							while(true)
 							{
 								Venta vent=new Venta();
@@ -93,7 +107,7 @@ namespace Farmacia
 							}
 							break;
 					
-					case 2:
+					case "2":
 							Console.WriteLine("----Lista de empleados----");
 						ArrayList emps=farm.todoEmpleados;
 						foreach(Empleado em in emps)
@@ -105,7 +119,7 @@ namespace Farmacia
 						}
 						break;
 						
-					case 3:
+					case "3":
 						try{
 						Console.WriteLine("----Eliminar Venta----");
 						Console.WriteLine("Ingrese numero de ticket");
@@ -117,8 +131,8 @@ namespace Farmacia
 							Console.WriteLine("El numero del ticket no existe");}
 						break;
 					
-					case 4:
-						int con=0;
+					case "4":
+						/*int con=0;
 						foreach(Venta v in farm.verVentas)
 						{
 							string tipo=(string)v.ObraSocial;
@@ -128,20 +142,21 @@ namespace Farmacia
 							}
 							
 						}
-						porcentaje(farm.cantidadVentas,con);
+						//porcentaje(farm.cantidadVentas,con);*/
+						porcentajeVentasOS(farm.verVentas);
 						break;
-					case 5:
+					case "5":
 						foreach(Venta v in farm.verVentas)
 						{
-							Console.WriteLine("NombreC {0},Droga{1},NumFactura{2},Fecha y hora{3},Importe{4}",v.NombreComercial,v.Droga,v.NumFactura,v.FechaHora,v.Importe);
+							Console.WriteLine("NombreC {0}, Droga: {1}, NumFactura: {2}, Fecha y hora: {3}, Importe: {4}, ObraSocial: {5}",v.NombreComercial,v.Droga,v.NumFactura,v.FechaHora,v.Importe,v.ObraSocial);
 						}
 						break;
 					default:
 						Console.WriteLine("programa terminado");
 						break;
 					}
-				}
-				else{
+				
+				if((opcion =="0")){
 					break;
 				}
 				
@@ -151,11 +166,40 @@ namespace Farmacia
 			Console.ReadKey(true);
 		}
 		
-		public static void porcentaje(int total,int os)
+		public static void porcentajeVentasOS(ArrayList ven)
 		{
-			double	obso=(double)os*(100/total);
+			int Os=0;
+			int total=ven.Count;
+			foreach(Venta v in ven){
+				
+				DateTime hoy= DateTime.Now;
+				if((v.ObraSocial != "")&(comparofechas(hoy,v.FechaHora,-15)==true))
+				{
+					Os++;	
+				}	
+			}
+			double	obso=(double)Os*(100/total);
 			Console.WriteLine("EL porcentaje de ventas de la quincena por Obra Social {0} %",obso);
 		}
 		
+		public static bool comparofechas(DateTime hy,DateTime comp,int quin)
+		{	
+			DateTime feant=hy.AddDays(quin);
+			int comparar=DateTime.Compare(feant,comp);
+			if (quin<=0){
+				if (comparar <= 0)
+				{
+					return true;
+				}
+				else{
+					return comparofechas(hy,comp,quin+1);
+				}	
+			}
+			else
+			{
+				return false;
+			}
+			
+		}
 	}
 }
