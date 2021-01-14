@@ -29,7 +29,7 @@ namespace Farmacia
 		}
 		
 		public void eliminarVenta(int nticket)
-		{
+		{	int cont=0;
 			for(int x=0;x<ventas.Count;x++)
 			{
 				Venta v=(Venta)ventas[x];
@@ -39,15 +39,19 @@ namespace Farmacia
 					{
 						if(v.CodigoEmpleado==e.Codigo)
 						{
-							e.SumaImporte=-v.Importe;
+							e.SumaImporte=-v.Importe;	
 						}
+						
+						
 					}
 					ventas.Remove(v);
+					break;
 				}
-				else{
-					throw new TicketInvalido();}
+				cont++;
 			}
-			
+			if(cont == ventas.Count){
+					throw new TicketInvalido();
+			}
 		}
 		
 		public Venta verVenta(int i)
